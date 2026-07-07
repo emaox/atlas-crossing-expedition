@@ -69,7 +69,7 @@ body > .main-layout {
 }
 
 .intro-section h1 {
-  font-size: 3.5rem;
+  font-size: clamp(2.1rem, 9vw, 3.5rem);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -1px;
@@ -605,8 +605,8 @@ body > .main-layout {
 }
 
 @keyframes hudScan {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(70vh); }
+  0%   { top: 0%; }
+  100% { top: 100%; }
 }
 
 .hud-readout {
@@ -686,12 +686,67 @@ body > .main-layout {
   .hud-readout {
     max-width: 160px;
     padding: 6px 9px;
-    top: 10px;
-    left: 10px;
   }
-  .hud-readout-value { font-size: 0.72rem; }
-  .hud-readout-sub   { font-size: 0.58rem; }
+  .hud-readout-value { font-size: 0.75rem; }
   .hud-corner { width: 18px; height: 18px; }
+}
+
+/* mobile: mappa più bassa (40vh) → HUD compatto per non ingombrare */
+@media (max-width: 768px) {
+  .hud-frame { border-radius: 16px; }
+
+  .hud-corner {
+    width: 14px;
+    height: 14px;
+    border-width: 1.5px;
+  }
+  .hud-corner.tl,
+  .hud-corner.tr { top: 8px; }
+  .hud-corner.bl,
+  .hud-corner.br { bottom: 8px; }
+  .hud-corner.tl,
+  .hud-corner.bl { left: 8px; }
+  .hud-corner.tr,
+  .hud-corner.br { right: 8px; }
+
+  .hud-frame::before {
+    background-image:
+      repeating-linear-gradient(0deg, rgba(230,126,34,0.06) 0px, rgba(230,126,34,0.06) 1px, transparent 1px, transparent 22px),
+      repeating-linear-gradient(90deg, rgba(230,126,34,0.06) 0px, rgba(230,126,34,0.06) 1px, transparent 1px, transparent 22px);
+  }
+
+  .hud-readout {
+    top: 8px;
+    left: 8px;
+    max-width: 118px;
+    padding: 5px 7px;
+    border-radius: 5px;
+  }
+
+  .hud-readout-label {
+    display: none; /* ridondante su schermo piccolo, la togliamo */
+  }
+
+  .hud-readout-value {
+    font-size: 0.6rem;
+    line-height: 1.15;
+    white-space: normal;   /* va a capo invece di troncare con "..." */
+    margin-bottom: 2px;
+  }
+
+  .hud-readout-sub {
+    font-size: 0.5rem;
+    flex-wrap: wrap;
+    row-gap: 2px;
+  }
+}
+
+/* schermi molto piccoli: teniamo solo terreno + numero tappa */
+@media (max-width: 480px) {
+  #hudCoords,
+  .hud-dot {
+    display: none;
+  }
 }
 
 
@@ -1666,7 +1721,7 @@ body > .main-layout {
 }
 
 @media (max-width: 768px) {
-  html {
+  body {
     scroll-snap-type: none;
   }
 
