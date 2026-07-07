@@ -415,6 +415,13 @@ window.addEventListener("scroll", () => {
 
 /* ============================================================
    TEAM — carosello con frecce, video play/pause sull'ultimo frame
+   DESKTOP: invariato, guidato da IntersectionObserver (click frecce)
+   MOBILE:  fix aggiuntivo — su schermi touch l'IntersectionObserver
+            con threshold 0.6 spesso non scatta con lo swipe libero
+            (la card non si ferma mai esattamente al centro), quindi
+            le card restano opache e il video non riparte. Su mobile
+            calcoliamo invece, ad ogni scroll, quale card è realmente
+            più vicina al centro del contenitore.
    ============================================================ */
 (function () {
   const teamScroll = document.getElementById("teamScroll");
@@ -424,6 +431,8 @@ window.addEventListener("scroll", () => {
 
   const teamCards = Array.from(teamScroll.querySelectorAll(".team-card"));
   let current = 0;
+
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
   /* --- padding laterale dinamico per centrare prima e ultima card --- */
   function aggiornaPadding() {
@@ -446,11 +455,12 @@ window.addEventListener("scroll", () => {
     const scrollLeft = card.offsetLeft - (teamScroll.offsetWidth - card.offsetWidth) / 2;
     teamScroll.scrollTo({ left: scrollLeft, behavior: "smooth" });
     // la classe "active" e il play del video li gestisce l'observer
-    // qui sotto, appena la card arriva a centro schermo — così funziona
-    // sia col click delle frecce sia con lo swipe diretto su mobile
+    // (desktop) o il listener di scroll (mobile) qui sotto — così
+    // funziona sia col click delle frecce sia con lo swipe diretto
   }
 
   function attivaVisuale(index) {
+    if (index === current && teamCards[index].classList.contains("active")) return;
     current = index;
     teamCards.forEach((c, i) => {
       const v = c.querySelector(".team-video");
@@ -465,19 +475,46 @@ window.addEventListener("scroll", () => {
     aggiornaFrecce();
   }
 
-  const teamObserver = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const idx = teamCards.indexOf(entry.target);
-          if (idx !== -1) attivaVisuale(idx);
-        }
-      });
-    },
-    { root: teamScroll, threshold: 0.6 }
-  );
+  if (!isMobile) {
+    // --- DESKTOP: comportamento originale, invariato ---
+    const teamObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const idx = teamCards.indexOf(entry.target);
+            if (idx !== -1) attivaVisuale(idx);
+          }
+        });
+      },
+      { root: teamScroll, threshold: 0.6 }
+    );
 
-  teamCards.forEach(card => teamObserver.observe(card));
+    teamCards.forEach(card => teamObserver.observe(card));
+
+  } else {
+    // --- MOBILE: fix — trova la card più vicina al centro ad ogni scroll ---
+    let scrollTimeout;
+
+    function trovaCardCentrale() {
+      const containerCenter = teamScroll.scrollLeft + teamScroll.offsetWidth / 2;
+      let closest = 0, minDist = Infinity;
+
+      teamCards.forEach((c, i) => {
+        const cardCenter = c.offsetLeft + c.offsetWidth / 2;
+        const dist = Math.abs(cardCenter - containerCenter);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      });
+
+      return closest;
+    }
+
+    teamScroll.addEventListener("scroll", () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        attivaVisuale(trovaCardCentrale());
+      }, 100);
+    }, { passive: true });
+  }
 
   teamCards.forEach(card => {
     const v = card.querySelector(".team-video");
@@ -495,7 +532,10 @@ window.addEventListener("scroll", () => {
   if (btnPrev) btnPrev.addEventListener("click", () => { if (current > 0) attivaCard(current - 1); });
   if (btnNext) btnNext.addEventListener("click", () => { if (current < teamCards.length - 1) attivaCard(current + 1); });
 
-  if (teamCards.length) attivaCard(0);
+  if (teamCards.length) {
+    attivaCard(0);
+    attivaVisuale(0);
+  }
 })();
 
 /* ============================================================
@@ -544,7 +584,7 @@ window.addEventListener("scroll", () => {
 
     // Usiamo un Image() — segue i redirect di Google senza blocchi CORS e dialoga perfettamente con doGet
     const img    = new Image();
-    
+
     function mostraSuccesso() {
       btn.textContent      = "Candidatura inviata ✓";
       feedback.textContent = "Grazie " + nome + "! Controlla la tua email — ti abbiamo inviato il programma completo.";
