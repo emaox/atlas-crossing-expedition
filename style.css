@@ -1731,6 +1731,7 @@ body > .main-layout {
   }
 
   .map-column {
+    flex: none;
     position: relative;
     top: 0;
     height: 40vh;
