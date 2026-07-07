@@ -442,6 +442,15 @@ window.addEventListener("scroll", () => {
   }
 
   function attivaCard(index) {
+    const card       = teamCards[index];
+    const scrollLeft = card.offsetLeft - (teamScroll.offsetWidth - card.offsetWidth) / 2;
+    teamScroll.scrollTo({ left: scrollLeft, behavior: "smooth" });
+    // la classe "active" e il play del video li gestisce l'observer
+    // qui sotto, appena la card arriva a centro schermo — così funziona
+    // sia col click delle frecce sia con lo swipe diretto su mobile
+  }
+
+  function attivaVisuale(index) {
     current = index;
     teamCards.forEach((c, i) => {
       const v = c.querySelector(".team-video");
@@ -453,11 +462,22 @@ window.addEventListener("scroll", () => {
         if (v && !v.paused) v.pause();
       }
     });
-    const card       = teamCards[index];
-    const scrollLeft = card.offsetLeft - (teamScroll.offsetWidth - card.offsetWidth) / 2;
-    teamScroll.scrollTo({ left: scrollLeft, behavior: "smooth" });
     aggiornaFrecce();
   }
+
+  const teamObserver = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = teamCards.indexOf(entry.target);
+          if (idx !== -1) attivaVisuale(idx);
+        }
+      });
+    },
+    { root: teamScroll, threshold: 0.6 }
+  );
+
+  teamCards.forEach(card => teamObserver.observe(card));
 
   teamCards.forEach(card => {
     const v = card.querySelector(".team-video");
