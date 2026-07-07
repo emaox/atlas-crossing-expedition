@@ -110,25 +110,57 @@ function startCountdown() {
 
 /* ============================================================
    MAPPA
+   (blindata: se Leaflet o la mappa falliscono per qualsiasi
+   motivo — CDN lento, rete mobile, blocco tracker — il resto
+   dello script continua comunque: carosello team, accordion,
+   glitch, day-card non dipendono dalla mappa)
    ============================================================ */
-const map = L.map("boundedMap", {
-  zoomControl:       false,
-  scrollWheelZoom:   false,
-  dragging:          false   // FIX: evita scroll accidentale su mobile
-});
+let map, tracciaAttiva, boundsTotale;
+let mapReady = false;
+const listaMarker = {};
 
-L.tileLayer(
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-).addTo(map);
+try {
+  map = L.map("boundedMap", {
+    zoomControl:       false,
+    scrollWheelZoom:   false,
+    dragging:          false   // FIX: evita scroll accidentale su mobile
+  });
 
-const coordinateIntere = tappe.map(t => t.coords);
-let   boundsTotale     = L.latLngBounds(coordinateIntere);
-const tracciaAttiva    = L.polyline([], {
-  color: "#e67e22",
-  weight: 5,
-  opacity: 1,
-  lineJoin: "round"
-}).addTo(map);
+  L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+  ).addTo(map);
+
+  const coordinateIntere = tappe.map(t => t.coords);
+  boundsTotale  = L.latLngBounds(coordinateIntere);
+  tracciaAttiva = L.polyline([], {
+    color: "#e67e22",
+    weight: 5,
+    opacity: 1,
+    lineJoin: "round"
+  }).addTo(map);
+
+  tappe.forEach(t => {
+    const layout = tooltipLayout[t.step] ?? { direction: "top", offset: [0, -10] };
+
+    listaMarker[t.step] = L.circleMarker(t.coords, {
+      radius:      5,
+      fillColor:   "#ffffff",
+      color:       "#e67e22",
+      weight:      1.5,
+      fillOpacity: 0.95,
+      interactive: false,
+      className:   "hud-marker"
+    })
+    .addTo(map)
+    .bindTooltip(previewNames[t.step] ?? t.nome, { ...tooltipOptions, ...layout });
+  });
+
+  mapReady = true;
+} catch (err) {
+  console.warn("Mappa non inizializzata, proseguo senza:", err);
+}
+
+const coordinateIntere = mapReady ? tappe.map(t => t.coords) : [];
 
 
 /* ============================================================
@@ -140,6 +172,8 @@ let routeLoaded   = false;
 let ultimoStepAttivo = null;  // tracciamo lo step visibile al momento del load
 
 async function caricaPercorsoStradale() {
+  if (!mapReady) return; // niente mappa, niente routing stradale
+
   const waypoints = tappe.map(t => `${t.coords[1]},${t.coords[0]}`).join(";");
   const url = `https://router.project-osrm.org/route/v1/driving/${waypoints}?overview=full&geometries=geojson`;
 
@@ -192,30 +226,16 @@ function trovaIndicePilota(coords, route) {
 
 /* ============================================================
    MARKER & TOOLTIP
+   (creazione marker spostata dentro il blocco try più sopra)
    ============================================================ */
-const listaMarker = {};
-
-tappe.forEach(t => {
-  const layout = tooltipLayout[t.step] ?? { direction: "top", offset: [0, -10] };
-
-  listaMarker[t.step] = L.circleMarker(t.coords, {
-    radius:      5,
-    fillColor:   "#ffffff",
-    color:       "#e67e22",
-    weight:      1.5,
-    fillOpacity: 0.95,
-    interactive: false,
-    className:   "hud-marker"
-  })
-  .addTo(map)
-  .bindTooltip(previewNames[t.step] ?? t.nome, { ...tooltipOptions, ...layout });
-});
 
 
 /* ============================================================
    LOGICA TOOLTIP PER STEP
    ============================================================ */
 function aggiornaTooltipAttivo(step) {
+  if (!mapReady) return;
+
   Object.entries(listaMarker).forEach(([key, marker]) => {
     const n = parseInt(key, 10);
 
@@ -263,6 +283,7 @@ function aggiornaHud(step) {
 let flyTimeout;
 
 function gestisciMappa(step) {
+  if (!mapReady) return;
   if (ultimoStepAttivo === step) return;
   ultimoStepAttivo = step;
   clearTimeout(flyTimeout);
@@ -381,6 +402,7 @@ window.addEventListener("keydown", e => {
    RESET ALLO SCROLL IN CIMA
    ============================================================ */
 window.addEventListener("scroll", () => {
+  if (!mapReady) return;
   if (window.scrollY < 50 && ultimoStepAttivo !== null) {
     clearTimeout(flyTimeout);
     ultimoStepAttivo = null;
@@ -575,7 +597,9 @@ document.querySelectorAll(".accordion-trigger").forEach(trigger => {
   });
 });
 
-map.fitBounds(boundsTotale, { padding: [40, 40] });
-aggiornaTooltipAttivo(0);
+if (mapReady) {
+  map.fitBounds(boundsTotale, { padding: [40, 40] });
+  aggiornaTooltipAttivo(0);
+}
 startCountdown();
 caricaPercorsoStradale();
