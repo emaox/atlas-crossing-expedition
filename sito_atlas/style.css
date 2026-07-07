@@ -1,0 +1,1885 @@
+/* ============================================================
+   LOGO FISSO
+   ============================================================ */
+.site-logo {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  z-index: 1000;
+  display: block;
+  transition: opacity 0.2s;
+}
+
+.site-logo:hover {
+  opacity: 0.8;
+}
+
+.site-logo img {
+  height: 80px;
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.25));
+}
+
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Barlow', system-ui, -apple-system, sans-serif;
+  font-weight: 300;
+  background: #F5EDE4;
+  color: #1d3557;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+}
+
+body > section,
+body > .main-layout {
+  scroll-snap-align: start;
+}
+
+
+/* ============================================================
+   INTRO
+   ============================================================ */
+.intro-section {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.25)),
+              url("foto/sfondo/sfondo_04.jpg") center/cover no-repeat;
+  color: #ffffff;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+.intro-section h1 {
+  font-size: 3.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  margin-bottom: 15px;
+}
+
+.intro-section p {
+  font-size: 1.15rem;
+  color: rgba(255,255,255,0.92);
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   GLITCH SWAP — titolo e citazioni in alternanza IT ⇄ AR
+   Applicabile a qualsiasi elemento (h1, h2...) che abbia
+   data-text-it / data-text-ar / data-text
+   ============================================================ */
+.glitch-swap {
+  position: relative;
+  transition: opacity 0.15s ease;
+}
+
+.glitch-swap.glitch-fade {
+  opacity: 0;
+}
+
+.glitch-swap.is-arabic {
+  font-family: 'Cairo', sans-serif !important;
+  letter-spacing: 0 !important;
+  font-weight: 800 !important;
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+.glitch-swap.glitching {
+  animation: glitchSkew 0.4s linear;
+}
+
+.glitch-swap.glitching::before,
+.glitch-swap.glitching::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.glitch-swap.glitching::before {
+  color: #e67e22;
+  opacity: 0.7;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  animation: glitchTop 0.4s linear;
+}
+
+.glitch-swap.glitching::after {
+  color: #6ec6ff;
+  opacity: 0.7;
+  clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+  animation: glitchBottom 0.4s linear;
+}
+
+@keyframes glitchSkew {
+  0%   { transform: skewX(0deg); }
+  20%  { transform: skewX(3deg); }
+  40%  { transform: skewX(-3deg); }
+  60%  { transform: skewX(2deg); }
+  80%  { transform: skewX(-2deg); }
+  100% { transform: skewX(0deg); }
+}
+
+@keyframes glitchTop {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-5px, -2px); }
+  40%  { transform: translate(4px, 2px); }
+  60%  { transform: translate(-3px, 1px); }
+  80%  { transform: translate(3px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes glitchBottom {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(5px, 2px); }
+  40%  { transform: translate(-4px, -2px); }
+  60%  { transform: translate(3px, -1px); }
+  80%  { transform: translate(-3px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch-swap.glitching,
+  .glitch-swap.glitching::before,
+  .glitch-swap.glitching::after {
+    animation: none;
+  }
+}
+
+
+/* ============================================================
+   COUNTDOWN
+   ============================================================ */
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(80px, 1fr));
+  gap: 12px;
+  margin: 22px auto 30px;
+  width: min(560px, 100%);
+  text-align: center;
+}
+
+.countdown-card {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 20px;
+  padding: 16px 12px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 14px 35px rgba(0,0,0,0.12);
+}
+
+.countdown-card strong {
+  display: block;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.countdown-card span {
+  display: block;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.8);
+}
+
+/* Pulsante rosso sotto il countdown */
+.btn-cta-red {
+  display: inline-block;
+  background-color: #d32f2f; /* Rosso */
+  color: #ffffff;
+  padding: 16px 32px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 20px; /* Spazio sotto il countdown */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+.btn-cta-red:hover {
+  background-color: #b71c1c;
+  transform: scale(1.05);
+}
+
+
+/* ============================================================
+   QUOTES
+   ============================================================ */
+.quotes-section {
+  position: relative;
+  background: #FDF8F4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 0;
+}
+
+.quotes-section::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.quotes-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(740px, 100%);
+  gap: 42px;
+  padding: 0;
+}
+
+.quote-slide {
+  min-height: 80vh;
+  width: min(680px, 92%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 42px 36px;
+  text-align: center;
+  background: rgba(255,255,255,0.92);
+  position: relative;
+  border-radius: 28px;
+  box-shadow: 0 28px 70px rgba(0,0,0,0.12);
+  opacity: 0.25;
+  transform: translateY(24px) scale(0.96);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  margin: 0 auto;
+  scroll-snap-align: start;
+}
+
+.quote-slide.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.quote-slide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.75));
+  border-radius: 28px;
+  z-index: 1;
+}
+
+.quote-content {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+  color: #ffffff;
+}
+
+/* Fix: selettore aggiornato da h2 a .quote-heading per riflettere l'HTML SEO */
+.quote-heading {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 18px;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.quote-slide p {
+  font-size: clamp(1rem, 2.2vw, 1.35rem);
+  color: rgba(255,255,255,0.9);
+  line-height: 1.8;
+  font-weight: 300;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* varianti colore quote */
+.quote-slide.bg-1 { background: url("foto/slides/slide_01.jpg") center/cover no-repeat; }
+.quote-slide.bg-2 { background: url("foto/slides/slide_02.jpg") center/cover no-repeat; }
+.quote-slide.bg-3 { background: url("foto/slides/slide_03.jpg") center/cover no-repeat; }
+.quote-slide.bg-4 { background: url("foto/slides/slide_04.jpg") center/cover no-repeat; }
+.quote-slide.bg-5 { background: url("foto/slides/slide_05.jpg") center/cover no-repeat; border-top: 3px solid #e67e22; }
+
+/* indicatori (nascosti) */
+.quote-indicator,
+.indicator-dot,
+.indicator-dot.active {
+  display: none;
+}
+
+
+/* ============================================================
+   SPIRITO DELLA SPEDIZIONE
+   ============================================================ */
+.spirit-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 0;
+  background: #FDF8F4;
+}
+
+.spirit-content {
+  width: min(760px, 92%);
+  margin: 0 auto;
+  padding: 52px 48px;
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid rgba(230,126,34,0.12);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.05);
+  color: #1d3557;
+}
+
+.spirit-content h2 {
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  margin-bottom: 24px;
+  letter-spacing: 2px;
+  color: #1d3557;
+  border-bottom: 2px solid #e67e22;
+  padding-bottom: 16px;
+}
+
+.spirit-content p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 18px;
+  color: #4b6584;
+}
+
+.spirit-content p:last-child {
+  margin-bottom: 0;
+  font-weight: 700;
+  color: #1d3557;
+}
+
+
+/* ============================================================
+   LAYOUT MAPPA + TAPPE
+   ============================================================ */
+.map-section {
+  background: #FDF8F4;
+  display: flex;
+  justify-content: center;
+}
+
+/* Fix: Rimosso blocco duplicato di .main-layout e unificato in modo coerente */
+.main-layout {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  gap: 50px;
+  position: relative;
+  background: transparent;
+}
+
+/* colonna mappa fissa */
+.map-column {
+  flex: 1;
+  position: sticky;
+  top: 15vh;
+  height: 70vh;
+  z-index: 50;
+}
+
+#boundedMap {
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.05);
+  background: #111;
+  overflow: hidden;
+}
+
+/* colonna testi */
+.text-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* card con scroll snapping */
+.day-card {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: center;
+}
+
+.card-content {
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.04);
+  width: 100%;
+  max-width: 420px;
+  opacity: 0.1;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.day-card.active .card-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* header card */
+.day-header-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.day-label {
+  font-weight: 800;
+  color: #aaa;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+}
+
+.specs-badge {
+  display: flex;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.spec-km {
+  background: rgba(52,152,219,0.08);
+  color: #2980b9;
+  padding: 4px 12px;
+  border-radius: 30px;
+}
+
+.spec-elevation {
+  background: rgba(230,126,34,0.08);
+  color: #d35400;
+  padding: 4px 12px;
+  border-radius: 30px;
+}
+
+/* Fix: Convertito in h3 per corrispondere ai tag h3 usati nell'HTML delle tappe */
+.card-content h3 {
+  font-size: 1.9rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  letter-spacing: -0.5px;
+  color: #111;
+}
+
+.card-content p {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* etichette speciali */
+.preview-label {
+  font-weight: 800;
+  color: #27ae60;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+}
+
+.final-label {
+  font-weight: 800;
+  color: #e67e22;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+}
+
+
+/* ============================================================
+   LEAFLET — tooltip personalizzati
+   ============================================================ */
+.leaflet-control-zoom,
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+.custom-tooltip {
+  background: rgba(26,26,26,0.85) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  border-radius: 14px !important;
+  padding: 4px 8px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.16) !important;
+  white-space: nowrap !important;
+}
+
+.custom-tooltip::before {
+  display: none !important;
+}
+
+
+/* ============================================================
+   HUD MILITARE — mappa stile ricognizione tattica
+   Palette: verde terminale + arancione del brand come accento
+   ============================================================ */
+
+/* satellite in colori reali — l'effetto HUD resta su bracket/griglia/scanline/readout */
+#boundedMap .leaflet-tile-pane {
+  filter: none;
+}
+
+.hud-frame {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  pointer-events: none;
+  z-index: 60;
+  overflow: hidden;
+}
+
+.hud-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(230,126,34,0.08) 0px, rgba(230,126,34,0.08) 1px, transparent 1px, transparent 32px),
+    repeating-linear-gradient(90deg, rgba(230,126,34,0.08) 0px, rgba(230,126,34,0.08) 1px, transparent 1px, transparent 32px);
+}
+
+.hud-corner {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 2px solid #e67e22;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 4px rgba(230,126,34,0.6));
+}
+.hud-corner.tl { top: 14px; left: 14px; border-right: none; border-bottom: none; }
+.hud-corner.tr { top: 14px; right: 14px; border-left: none; border-bottom: none; }
+.hud-corner.bl { bottom: 14px; left: 14px; border-right: none; border-top: none; }
+.hud-corner.br { bottom: 14px; right: 14px; border-left: none; border-top: none; }
+
+.hud-scanline {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(230,126,34,0.55), transparent);
+  animation: hudScan 4s linear infinite;
+  mix-blend-mode: screen;
+}
+
+@keyframes hudScan {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(70vh); }
+}
+
+.hud-readout {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 61;
+  background: rgba(6, 20, 10, 0.72);
+  border: 1px solid rgba(230,126,34,0.4);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: 'Share Tech Mono', monospace;
+  color: #e67e22;
+  text-shadow: 0 0 4px rgba(230,126,34,0.5);
+  backdrop-filter: blur(2px);
+  max-width: 220px;
+}
+
+.hud-readout-label {
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  opacity: 0.7;
+  margin-bottom: 2px;
+}
+
+.hud-readout-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #e67e22;
+  text-shadow: 0 0 6px rgba(230,126,34,0.5);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hud-readout-sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.hud-dot {
+  color: #e67e22;
+  font-size: 0.5rem;
+  animation: hudBlink 1.6s ease-in-out infinite;
+}
+
+@keyframes hudBlink {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 1; }
+}
+
+/* marker con pulse tipo radar blip (resta arancione, coerente col brand) */
+.hud-marker {
+  animation: hudMarkerPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes hudMarkerPulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* glow sulla traccia e sui marker */
+#boundedMap .leaflet-overlay-pane path {
+  filter: drop-shadow(0 0 5px rgba(230,126,34,0.75));
+}
+
+/* tooltip: stile originale del sito, nessun override HUD */
+
+@media (max-width: 900px) {
+  .hud-readout {
+    max-width: 160px;
+    padding: 6px 9px;
+    top: 10px;
+    left: 10px;
+  }
+  .hud-readout-value { font-size: 0.72rem; }
+  .hud-readout-sub   { font-size: 0.58rem; }
+  .hud-corner { width: 18px; height: 18px; }
+}
+
+
+/* ============================================================
+   DATI SPEDIZIONE
+   ============================================================ */
+.expedition-data {
+  padding: 80px 20px 120px;
+  background: #F5EDE4;
+}
+
+.expedition-data-title {
+  text-align: center;
+  margin-bottom: 48px;
+  color: #1d3557;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-weight: 800;
+}
+
+.expedition-data-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.expedition-data-card {
+  background: #ffffff;
+  border: 1px solid rgba(34,100,167,0.08);
+  border-radius: 24px;
+  padding: 30px 26px;
+  box-shadow: 0 18px 42px rgba(17,68,117,0.06);
+}
+
+.expedition-data-card strong {
+  display: block;
+  font-size: 2.3rem;
+  font-weight: 900;
+  color: #1d3557;
+  margin-bottom: 12px;
+}
+
+.expedition-data-card span {
+  display: block;
+  font-size: 1rem;
+  color: #4b6584;
+  line-height: 1.75;
+}
+
+
+/* ============================================================
+   FASCIA ETÀ
+   ============================================================ */
+.age-section {
+  background: #FDF8F4;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.age-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  background: #ffffff;
+  border: 1px solid rgba(29,53,87,0.1);
+  border-radius: 16px;
+  padding: 16px 32px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.age-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #aab8c8;
+}
+
+.age-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(0,0,0,0.08);
+}
+
+.age-range {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #1d3557;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.age-stars {
+  font-size: 1.2rem;
+  color: #e67e22;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+
+/* ============================================================
+   TEAM
+   ============================================================ */
+.team-section {
+  padding: 100px 20px 120px;
+  background: #F5EDE4;
+  text-align: center;
+}
+
+.team-title {
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  font-weight: 900;
+  margin-bottom: 20px;
+  color: #1d3557;
+}
+
+.team-subtitle {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 800;
+  margin: 70px 0 30px;
+  color: #1d3557;
+}
+
+.team-intro {
+  max-width: 750px;
+  margin: 0 auto 20px;
+  color: #4b6584;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+/* foto di gruppo */
+.team-group-photo {
+  max-width: 860px;
+  margin: 50px auto;
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 28px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.08);
+}
+
+.team-group-photo img {
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  object-fit: cover;
+  display: block;
+}
+
+.team-caption {
+  margin-top: 14px;
+  font-style: italic;
+  color: #888;
+  font-size: 0.95rem;
+}
+
+/* ---- wrapper con frecce ---- */
+.team-carousel-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.team-arrow {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #1d3557;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  z-index: 10;
+}
+
+.team-arrow:hover {
+  background: #e67e22;
+  color: #ffffff;
+  transform: scale(1.08);
+  box-shadow: 0 12px 30px rgba(230,126,34,0.3);
+}
+
+.team-arrow:disabled {
+  opacity: 0.25;
+  cursor: default;
+  transform: none;
+}
+
+/* ---- carosello ---- */
+.team-scroll {
+  display: flex;
+  gap: 32px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 50px 0;
+  scroll-snap-type: x mandatory;
+  scroll-snap-stop: always;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  scrollbar-width: none;
+}
+
+.team-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---- card membro ---- */
+.team-card {
+  min-width: 840px;
+  width: 840px;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 36px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.10);
+  scroll-snap-align: center;
+  flex-shrink: 0;
+  display: flex;
+  gap: 36px;
+  align-items: center;
+  opacity: 0.15;
+  transform: scale(0.93);
+  transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.team-card.active {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.14);
+}
+
+/* video a sinistra */
+.video-container {
+  flex-shrink: 0;
+  width: 300px;
+  height: 400px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #111;
+}
+
+.team-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+}
+
+/* testo a destra */
+.team-card-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  padding: 8px 0;
+}
+
+.team-card-text h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 10px;
+  letter-spacing: -0.04em;
+}
+
+.role {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #e67e22;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 18px;
+}
+
+.desc {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.75;
+}
+
+
+/* ============================================================
+   UTILITY TITOLI SEZIONE
+   ============================================================ */
+.section-title {
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  font-weight: 900;
+  color: #1d3557;
+  text-align: center;
+  margin-bottom: 16px;
+  letter-spacing: -0.03em;
+}
+
+.section-intro {
+  text-align: center;
+  color: #4b6584;
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 620px;
+  margin: 0 auto 56px;
+}
+
+
+/* ============================================================
+   EQUIPAGGIAMENTO
+   ============================================================ */
+.gear-section {
+  padding: 100px 20px 120px;
+  background: #FDF8F4;
+}
+
+.gear-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.gear-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 32px 24px 28px;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.06);
+  border: 1px solid rgba(34,100,167,0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gear-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 56px rgba(0,0,0,0.11);
+}
+
+.gear-icon {
+  font-size: 2.6rem;
+  margin-bottom: 16px;
+  line-height: 1;
+}
+
+.gear-card h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1d3557;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.gear-card p {
+  font-size: 0.9rem;
+  color: #4b6584;
+  line-height: 1.65;
+}
+
+
+/* ============================================================
+   MEDIA GALLERY
+   ============================================================ */
+.gallery-section {
+  padding: 100px 20px 120px;
+  background: #F5EDE4;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+}
+
+.gallery-item {
+  border-radius: 20px;
+  overflow: hidden;
+  background: #cdd8e3;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.04);
+}
+
+
+/* ============================================================
+   COMMUNITY
+   ============================================================ */
+.community-section {
+  padding: 100px 20px 120px;
+  background: #FDF8F4;
+}
+
+.community-photo {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 28px 70px rgba(0,0,0,0.12);
+}
+
+.community-photo img {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+  display: block;
+}
+
+.community-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%);
+  display: flex;
+  align-items: flex-end;
+  padding: 36px 40px;
+}
+
+.community-overlay span {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+
+/* ============================================================
+   CTA / FORM CANDIDATURA
+   ============================================================ */
+.cta-section {
+  padding: 120px 20px 140px;
+  background: linear-gradient(160deg, #0f2236 0%, #1a3a5c 60%, #0f2236 100%);
+  text-align: center;
+}
+
+.cta-inner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.cta-badge {
+  display: inline-block;
+  background: rgba(230,126,34,0.18);
+  color: #e67e22;
+  border: 1px solid rgba(230,126,34,0.35);
+  border-radius: 30px;
+  padding: 6px 18px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.cta-title {
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin-bottom: 18px;
+}
+
+.cta-subtitle {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+  margin-bottom: 52px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* form */
+.cta-form-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  text-align: left;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group.full {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-size: 0.95rem;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.25s, background 0.25s;
+  font-family: inherit;
+  resize: none;
+  width: 100%;
+}
+
+.form-group select option {
+  background: #1a3a5c;
+  color: #ffffff;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(255,255,255,0.28);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: rgba(230,126,34,0.7);
+  background: rgba(255,255,255,0.11);
+}
+
+/* bottoni */
+.cta-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.btn-primary {
+  background: #e67e22;
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 40px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.btn-primary:hover {
+  background: #cf6d17;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 50px;
+  padding: 16px 32px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.14);
+  transform: translateY(-2px);
+}
+
+/* Fix: Feedback d'invio migliorato graficamente */
+.form-feedback {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 15px;
+  font-family: 'Barlow', sans-serif;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+  min-height: 24px;
+}
+/* Aggiungi questo subito sotto il tuo .form-feedback */
+.form-feedback.success {
+  color: #2ecc71 !important; /* Un bel verde acceso ed elegante, visibile sullo sfondo scuro */
+}
+
+
+/* ============================================================
+   QUOTA
+   ============================================================ */
+.quota-section {
+  padding: 100px 20px 120px;
+  background: #F5EDE4;
+}
+
+.quota-price {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 56px;
+}
+
+/* early bird card */
+.early-bird-card {
+  width: 100%;
+  max-width: 560px;
+  background: #c0392b;
+  border-radius: 24px;
+  padding: 36px 40px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(192,57,43,0.25);
+}
+
+.eb-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.eb-badge {
+  background: rgba(230,126,34,0.18);
+  color: #e67e22;
+  border: 1px solid rgba(230,126,34,0.4);
+  border-radius: 30px;
+  padding: 5px 16px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.eb-validity {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+}
+
+.eb-amount {
+  font-size: clamp(3rem, 7vw, 4.5rem);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.eb-note {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+/* countdown early bird */
+.eb-countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.eb-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 56px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 12px 8px;
+}
+
+.eb-unit strong {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.eb-unit span {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.eb-sep {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.2);
+  line-height: 1;
+  margin-bottom: 18px;
+}
+
+/* prezzo standard */
+.standard-price {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.standard-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #aab8c8;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.standard-amount {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #c0cdd8;
+  letter-spacing: -0.03em;
+  text-decoration: line-through;
+  text-decoration-color: rgba(192,205,216,0.5);
+}
+
+.standard-sub {
+  font-size: 0.82rem;
+  color: #aab8c8;
+}
+
+/* accordions */
+.quota-accordions {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.accordion {
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.07);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+}
+
+.accordion-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 28px;
+  background: #F5EDE4;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.accordion-trigger:hover {
+  background: #eef5fc;
+}
+
+.accordion-trigger[aria-expanded="true"] {
+  background: #eef5fc;
+}
+
+.accordion-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.accordion-label {
+  flex: 1;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1d3557;
+  letter-spacing: -0.01em;
+}
+
+.accordion-chevron {
+  font-size: 1.1rem;
+  color: #7a9ab5;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.accordion-trigger[aria-expanded="true"] .accordion-chevron {
+  transform: rotate(180deg);
+}
+
+.accordion-panel {
+  background: #ffffff;
+  padding: 0 28px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+}
+
+.accordion-panel:not([hidden]) {
+  padding: 24px 28px 28px;
+  max-height: 600px;
+}
+
+/* lista voci */
+.quota-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.quota-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.97rem;
+  color: #3a5068;
+  line-height: 1.6;
+}
+
+.q-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 7px;
+}
+
+.q-dot.green { background: #2ecc71; }
+.q-dot.red   { background: #e74c3c; }
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer {
+  background: #0a1a2b;
+  padding: 60px 20px 40px;
+  color: rgba(255,255,255,0.55);
+}
+
+.footer-top {
+  max-width: 1100px;
+  margin: 0 auto 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-logo {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+}
+
+.footer-tagline {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.35);
+}
+
+.footer-social {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.footer-social-link:hover {
+  color: #ffffff;
+}
+
+.footer-divider {
+  max-width: 1100px;
+  margin: 0 auto 36px;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+}
+
+.footer-bottom {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer-legal {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-legal p {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.3);
+}
+
+.footer-legal strong {
+  color: rgba(255,255,255,0.55);
+  font-weight: 600;
+}
+
+.footer-copy {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.2);
+  margin-top: 8px;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 860px) {
+  .expedition-data-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    scroll-snap-type: none;
+  }
+
+  .main-layout {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .map-column {
+    position: relative;
+    top: 0;
+    height: 40vh;
+    width: 100%;
+  }
+
+  .text-column {
+    width: 100%;
+  }
+
+  .day-card {
+    height: auto;
+    padding: 40px 0;
+  }
+
+  .gear-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .gear-grid .gear-card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr;
+    aspect-ratio: auto;
+  }
+
+  .gallery-item {
+    height: 180px;
+  }
+
+  .community-photo img {
+    height: 280px;
+  }
+
+  .cta-form-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.full {
+    grid-column: 1;
+  }
+
+  .cta-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* team su mobile: card in colonna */
+  .team-carousel-wrap {
+    gap: 8px;
+  }
+
+  .team-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .team-scroll {
+    padding: 30px 0;
+  }
+
+  .team-card {
+    min-width: 88vw;
+    width: 88vw;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .video-container {
+    width: 100%;
+    height: 260px;
+  }
+
+  .team-card-text {
+    text-align: center;
+  }
+}
+
+
+/* ============================================================
+   TIPOGRAFIA — Bebas Neue titoli / Barlow corpo
+   ============================================================ */
+
+/* tutti i titoli */
+h1, h2, h3,
+.section-title,
+.expedition-data-title,
+.team-title,
+.team-subtitle,
+.cta-title,
+.footer-logo,
+.spirit-content h2,
+.card-content h3,     /* Fix: Aggiornato da h2 a h3 */
+.quote-heading,       /* Fix: Aggiornato da .quote-slide h2 a .quote-heading */
+.gear-card h3,
+.team-card-text h3,
+.accordion-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+
+/* numeri grandi */
+.countdown-card strong,
+.expedition-data-card strong,
+.eb-amount,
+.standard-amount,
+.age-range,
+.eb-unit strong {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+/* corpo testi */
+p, li, .desc,
+.spirit-content p,
+.card-content p,
+.eb-note,
+.cta-subtitle,
+.footer-legal p,
+.team-intro {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300;
+}
+
+/* label uppercase */
+.day-label,
+.preview-label,
+.final-label,
+.role,
+.age-label,
+.eb-badge,
+.cta-badge,
+.standard-label,
+.community-overlay span,
+.section-intro {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 700;
+}
+
+/* form e bottoni */
+input, select, textarea, button,
+.btn-primary, .btn-secondary {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 400;
+}
+/* Fix: Rimossa la parentesi graffa orfana che rompeva la compilazione */
+
+/* ============================================================
+   FIX COMPLETO SPAZIO TRA FORM (CTA) E FOOTER
+   ============================================================ */
+
+/* 1. Allinea il pulsante "Scarica programma" con il bottone invia */
+.cta-actions .btn-secondary {
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* 2. Azzera i margini della sezione del form e allunga il padding */
+.cta-section {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 140px !important; /* Mantiene lo spazio interno colorato di blu */
+  position: relative;
+  z-index: 2;
+}
+
+/* 4. Resetta il form e applica un leggerissimo trucco antiriflesso in basso */
+.cta-form-wrap {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* 5. Incolla il footer alla sezione sopra ed elimina i margini interni dei suoi primi elementi */
+.site-footer {
+  margin-top: -1px !important; /* Sovrappone di 1px il footer al form per eliminare linee fantasma */
+  position: relative;
+  z-index: 3;
+}
+
+.footer-top {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+/* ============================================================
+   FIX BARRA BIANCA — eliminazione spazio tra CTA e footer
+   ============================================================ */
+.cta-section {
+  margin-bottom: 0 !important;
+  padding-bottom: 120px !important;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
